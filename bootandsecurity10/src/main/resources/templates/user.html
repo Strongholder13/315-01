@@ -11,11 +11,13 @@
 </head>
 <header>
   <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+
     <div class="container-fluid me-auto">
                 <span class="navbar-brand">
-                    <strong th:utext="${user.getUsername()}"></strong>
+
+                    <strong  th:text="${currentUser.username}"></strong>
                      with roles:
-                    <span  th:each="role : ${user.getRoleNames()}">
+                    <span  th:each="role : ${currentUser.roles}">
                         <a th:text="${role}"></a>
                         </span>
                 </span>
@@ -82,12 +84,12 @@
               </thead>
               <tbody>
               <tr>
-                <td th:text="${user.id}"/>
-                <td th:text="${user.name}"/>
-                <td th:text="${user.surname}"/>
-                <td th:text="${user.age}"/>
-                <td th:text="${user.username}"/>
-                <td><a th:each="role : ${user.getRoles()}">
+                <td th:text="${currentUser.id}"/>
+                <td th:text="${currentUser.name}"/>
+                <td th:text="${currentUser.surname}"/>
+                <td th:text="${currentUser.age}"/>
+                <td th:text="${currentUser.username}"/>
+                <td><a th:each="role : ${currentUser.getRoles()}">
                   <a th:text="${role.toString()}"></a>
                 </a></td>
               </tr>

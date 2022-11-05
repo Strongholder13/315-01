@@ -23,8 +23,8 @@
                 <span class="navbar-brand">
                     <strong th:utext="${currentUser.getUsername()}"></strong>
                      with roles:
-                    <span  th:each="role : ${currentUser.getRoleNames()}">
-                        <a th:text="${role}"></a>
+                    <span  th:each="role : ${currentUser.roles}">
+                        <a th:text="${role.toString()}"></a>
                         </span>
                 </span>
     </div>
@@ -101,18 +101,18 @@
                       <td th:text="${ussr.surname}"/>
                       <td th:text="${ussr.age}"/>
                       <td th:text="${ussr.username}"/>
-                      <td><a th:each="role : ${ussr.getRoleNames()}">
-                        <a th:text="${role}"></a>
+                      <td><a th:each="role : ${ussr.roles}">
+                        <a th:text="${role.toString()}"></a>
                       </a></td>
                         <td>
 
                             <!-- Button edit -->
-                            <button type="button" class="btn btn-info" data-toggle="modal" th:href="${'#edit'}">
+                            <button type="button" class="btn btn-info" data-toggle="modal" th:href="${'#edit'  + ussr}">
                                 Edit
                             </button>
 
                             <!-- Modal edit -->
-                            <div class="modal fade" th:id="${'edit'}"
+                            <div class="modal fade" th:id="${'edit' + ussr.id}"
                                   data-backdrop="static"
                                   data-keyboard="false" tabindex="-1"
 
@@ -129,9 +129,9 @@
                                         <div class="modal-body">
                                             <div class="col-md-8 mx-auto">
                                                 <form th:method="POST"
-                                                      th:action="@{/update}"
+                                                      th:action="@{/update/{id} (id=${ussr.id})}"
 
-                                                      th:id="${'editForm'}">
+                                                      th:id="${'editForm' + ussr.id}">
                                                     <div class="form-group text-center">
                                                         <label for="edit-id"><strong>ID</strong></label>
                                                         <input type="text" class="form-control" id="edit-id" readonly th:value="${ussr.id}">
@@ -158,6 +158,7 @@
                                                     </div>
                                                     <div class="form-group text-center">
                                                         <label for="e-role"><strong>Role</strong></label>
+<!--                                                        <input type="hidden" name="roles" th:field="${ussr.roles}"/>-->
                                                         <select class="custom-select"
                                                                 id="e-Role"
                                                                 multiple="multiple" name="role" size="2" th:value="${newRole.role}">
@@ -174,6 +175,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                 <input type="submit"
+                                                       th:form="${'editForm' + ussr.id}"
                                                        class="btn btn-primary"
                                                        value="Edit"/>
                                             </div>
@@ -198,7 +200,8 @@
                               </div>
                               <div class="modal-body">
                                 <div class="col-md-8 mx-auto">
-                                    <form th:method="Delete" th:action="@{/delete{id}(id=${ussr.id})}">
+                                    <form th:action="@{/admin/delete/{id}(id=${ussr.id})}"
+                                          th:id="${'deleteForm' + ussr.id}">
                                     <div class="form-group text-center">
                                       <label for="id"><strong>ID</strong></label>
                                       <input type="text" class="form-control" id="id" readonly th:value="${ussr.id}">
@@ -234,7 +237,10 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Delete</button >
+                                    <input type="submit"
+                                           th:form="${'deleteForm' + ussr.id}"
+                                           class="btn btn-danger"
+                                           value="Delete"/>
                                 </div>
                               </div>
 
@@ -325,12 +331,12 @@
                     </thead>
                     <tbody>
                     <tr>
-                      <td th:text="${admin.id}"/>
-                      <td th:text="${admin.name}"/>
-                      <td th:text="${admin.surname}"/>
-                      <td th:text="${admin.age}"/>
-                      <td th:text="${admin.username}"/>
-                      <td><a th:each="role : ${admin.getRoles()}">
+                      <td th:text="${currentUser.id}"/>
+                      <td th:text="${currentUser.name}"/>
+                      <td th:text="${currentUser.surname}"/>
+                      <td th:text="${currentUser.age}"/>
+                      <td th:text="${currentUser.username}"/>
+                      <td><a th:each="role : ${currentUser.getRoles()}">
                         <a th:text="${role.toString()}"></a>
                       </a></td>
                     </tr>

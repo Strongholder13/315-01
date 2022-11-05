@@ -1,14 +1,12 @@
 package com.springsecurity.bootsecurity.model;
 
 import lombok.Data;
+
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 @Data
@@ -38,47 +36,24 @@ public class User implements UserDetails {
     @NonNull
     private String password;
 
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
     private List<Role> roles;
 
 
-//    private List<String> roleNames {
-//        roleNames = Collections.singletonList(roles.toString());
-//    };
 
-
-
-    public List<String> getRoleNames() {
-        List<String> roleNames = new ArrayList<>();
-        for (Role role : roles) {
-            roleNames.add(role.getRole().substring(5));
-        }
-         return roleNames;
-    }
-
-    public User(int Id, @NonNull String username, String name, String surname, int age, @NonNull String password, List<Role> roles) {
+    public User(int Id, @NonNull String username, String name, String surname, int age, @NonNull String password) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.password = password;
-        this.roles = roles;
 
     }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-//    public void setRole(String role) {
-//
-//        List<Role> roles = new ArrayList();
-//    Role newRole = new Role(user.getUsername(), role) ;
-//    roles.add(newRole);
-//    user.setRoles(roles);
-//        this.roles = roles;
-//    }
 
     public User() {
 
@@ -128,7 +103,7 @@ public class User implements UserDetails {
                 ", surname='" + surname +
                 ", age=" + age +
                 ", password='" + password +
-                ", role='" + roles +
+                ", Roles='" + roles +
                 '}';
     }
 }

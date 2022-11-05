@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -35,28 +32,43 @@ public class UserServiceImp implements UserService {
 public void add(User user, String role) {
     List<Role> roles = new ArrayList();
     if (role == null){role = "ROLE_NOROLE";}
-    Role newRole = new Role(user.getUsername(), role) ;
+    Role newRole = new Role(role) ;
     roles.add(newRole);
     user.setRoles(roles);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     usersRepository.save(user);
 }
+
+    @Transactional
+    @Override
+    public void add(User user, List<Role> roles) {
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        usersRepository.save(user);
+    }
     @Transactional
     @Override
     public void update(User user, String roleName) {
         List<Role> roles = user.getRoles();
-        roles.add(new Role(user.getUsername(), roleName));
+        if (roles == null){roles = new ArrayList();}
+        Role newRole = new Role(roleName) ;
+        roles.add(newRole);
+//        roles.add(new Role(roleName));
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
 
     }
-    @Transactional
-    @Override
-    public void update(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
-    }
+//    @Transactional
+//    @Override
+//    public void update(User user) {
+//        List<Role> roles = new ArrayList();
+//        Role newRole = new Role("ROLE_NOROLE2") ;
+//        roles.add(newRole);
+//        user.setRoles(roles);
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        usersRepository.save(user);
+//    }
     @Override
     public List<User> listUsers() {
         return usersRepository.findAll();
@@ -76,17 +88,18 @@ public void add(User user, String role) {
     public void delete(int id) {
         usersRepository.deleteById(id);
     }
+
     @Override
     public User findByUsername(String username) {
         Optional<User> user = usersRepository.findByUsername(username);
         return user.orElse(null);
     }
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = usersRepository.findByUsername(username);
         if (user.isEmpty()){
             throw new UsernameNotFoundException("User not found");
         }
-        return user.get();
+        return user.orElse(null);
     }
 }

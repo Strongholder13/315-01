@@ -6,51 +6,56 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
-@Table(name= "Roles")
+@Table(name= "roles")
 public class Role implements GrantedAuthority {
 
     @Id
-    @Column(name = "username")
-    private String username;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column
     private String role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
-    private User user;
+
+
+//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "user")
+//    @JoinTable(
+//            name = "user_roly",
+//            joinColumns = { @JoinColumn(name = "user_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "roly_id") }
+//    )
+   //private Set<User> user;
 
 
     public Role() {
     }
 
-    public String getUsername() {
-        return username;
+    public Role(String role) {
+        this.role = role;
     }
+//    @ManyToMany
+//    private List<User> users;
 
     public String getRole() {
         return role;
     }
 
-    public List<String> getRoleNames() {
-        List<String> roleNames = new ArrayList();
-        for (Role role : user.getRoles()){
-            roleNames.add(role.getRole());
-        }
-        return roleNames;
-    }
+//    public List<String> getRoleNames() {
+//        List<String> roleNames = new ArrayList();
+//        for (Role role : user.getRoles()){
+//            roleNames.add(role.getRole());
+//        }
+//        return roleNames;
+//    }
 
-    public Role(String username, String role) {
-        this.username = username;
-        this.role = role;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+
+
 
     public void setRole(String role) {
         this.role = role;
@@ -60,12 +65,12 @@ public class Role implements GrantedAuthority {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Role role1)) return false;
-        return username.equals(role1.username) && role.equals(role1.role);
+        return id == id && role.equals(role1.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, role);
+        return Objects.hash(id, role);
     }
 
     @Override

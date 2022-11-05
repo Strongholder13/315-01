@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -25,10 +27,16 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
+    @GetMapping("/users")
+    public List<User> showAllUsers(){
+        List<User> allUsersList = userService.listUsers();
+        return allUsersList;
+    }
+
     @GetMapping("/admin")
     public String index(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("admin", userService.findByUsername(authentication.getName()));
+        //model.addAttribute("admin", userService.findByUsername(authentication.getName()));
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("newUser", new User());
         model.addAttribute("newRole", new Role());
@@ -40,7 +48,8 @@ public class UserController {
     @GetMapping("/user")
     public String indexUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("user", userService.loadUserByUsername(authentication.getName()));
+        User user = userService.loadUserByUsername(authentication.getName());
+        model.addAttribute("currentUser", (User)userService.loadUserByUsername(authentication.getName()));
         return "/user";
     }
     @PostMapping("/registration")
@@ -52,15 +61,15 @@ public class UserController {
         userService.add(user, role.getRole());
         return "redirect:/admin";
     }
-    @PostMapping("/update/")
+    @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") User user,
                              @ModelAttribute("addRoles") Role role) {
         userService.update(user, role.getRole());
         return "redirect:/admin";
     }
 
-    @DeleteMapping ("/delete")
-    public String delete(@RequestParam("id") int id) {
+    @GetMapping ("/delete/{id}")
+    public String delete( @PathVariable("id") int id) {
         userService.delete(id);
         return "redirect:/admin";
     }
