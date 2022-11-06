@@ -27,17 +27,20 @@ public class UserServiceImp implements UserService {
         this.rolesRepository = rolesRepository;
         this.passwordEncoder = passwordEncoder;
     }
-@Transactional
-@Override
-public void add(User user, String role) {
-    List<Role> roles = new ArrayList();
-    if (role == null){role = "ROLE_NOROLE";}
-    Role newRole = new Role(role) ;
-    roles.add(newRole);
-    user.setRoles(roles);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    usersRepository.save(user);
-}
+
+    @Transactional
+    @Override
+    public void add(User user, String role) {
+        List<Role> roles = new ArrayList();
+        if (role == null) {
+            role = "ROLE_NOROLE";
+        }
+        Role newRole = new Role(role);
+        roles.add(newRole);
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        usersRepository.save(user);
+    }
 
     @Transactional
     @Override
@@ -49,26 +52,17 @@ public void add(User user, String role) {
     @Transactional
     @Override
     public void update(User user, String roleName) {
-        List<Role> roles = user.getRoles();
-        if (roles == null){roles = new ArrayList();}
-        Role newRole = new Role(roleName) ;
-        roles.add(newRole);
-//        roles.add(new Role(roleName));
-        user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
+        List<Role> roles = new ArrayList();
+        if (roleName == null) {
+            roles = usersRepository.findById(user.getId()).get().getRoles();
+        } else {
+            roles.add(new Role(roleName));
+        }
+            user.setRoles(roles);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            usersRepository.save(user);
 
     }
-//    @Transactional
-//    @Override
-//    public void update(User user) {
-//        List<Role> roles = new ArrayList();
-//        Role newRole = new Role("ROLE_NOROLE2") ;
-//        roles.add(newRole);
-//        user.setRoles(roles);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        usersRepository.save(user);
-//    }
     @Override
     public List<User> listUsers() {
         return usersRepository.findAll();
