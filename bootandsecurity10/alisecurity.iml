@@ -15,6 +15,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="alisecurity" value="0dfd876a-76d0-4e92-b6b8-8cc70f80b9ba" />
           <factory-entry name="entityManagerFactory" value="5f458309-2628-475d-a3fb-d6ffc29a7f45" />
         </datasource-mapping>
         <naming-strategy-map />

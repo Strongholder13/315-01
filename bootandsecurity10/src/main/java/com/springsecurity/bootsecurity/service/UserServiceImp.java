@@ -80,6 +80,8 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void delete(int id) {
+        List<Role> roles = usersRepository.findById(id).get().getRoles();
+        rolesRepository.deleteAll(roles);
         usersRepository.deleteById(id);
     }
 
