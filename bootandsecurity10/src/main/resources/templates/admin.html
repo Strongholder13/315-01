@@ -290,11 +290,13 @@
                     </div>
                     <div class="form-group text-center">
                       <label for="role"><strong>Role</strong></label>
-                    <select type="text" class="custom-select" th:field="*{newRole.role}"
+                    <select type="text" class="custom-select"
                             id="role"
-                            multiple="multiple" size="2">
-                      <option th:value="ROLE_ADMIN">ADMIN</option>
-                      <option th:value="ROLE_USER">USER</option>
+                            multiple="multiple" size="2" name="role">
+
+                      <option th:each="role : ${allRoles}" th:value="${role}" th:text="${role.substring(5)} " ></option>
+
+
                     </select>
                     </div>
                     <div class="form-group text-center">

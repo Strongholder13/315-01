@@ -53,12 +53,12 @@ public class UserController {
         return "/user";
     }
     @PostMapping("/registration")
-    public String saveUser(@ModelAttribute("newUser") @Valid User user, @ModelAttribute("newRole") Role role, BindingResult bindingResult) {
+    public String saveUser(@ModelAttribute("newUser") @Valid User user, @RequestParam(value = "role", required = false) List<String> role, BindingResult bindingResult) {
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/admin";
         }
-        userService.add(user, role.getRole());
+        userService.add(user, role);
         return "redirect:/admin";
     }
     @PostMapping("/update/{id}")

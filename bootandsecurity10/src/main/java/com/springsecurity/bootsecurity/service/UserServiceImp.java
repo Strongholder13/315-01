@@ -43,13 +43,19 @@ public class UserServiceImp implements UserService {
             usersRepository.save(user);
     }
 
-//    @Transactional
-//    @Override
-//    public void add(User user, List<Role> roles) {
-//        user.setRoles(roles);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        usersRepository.save(user);
-//    }
+    @Transactional
+    @Override
+    public void add(User user, List<String> roles) {
+        List<Role> roleList = new ArrayList<>();
+        for (Role role : rolesRepository.findAll()) {
+            if (roles.contains(role.getRole())) {
+                roleList.add(role);
+            }
+        }
+        user.setRoles(roleList);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        usersRepository.save(user);
+    }
     @Transactional
     @Override
     public void update(User user, String roleName) {
@@ -81,8 +87,8 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void delete(int id) {
-        List<Role> roles = usersRepository.findById(id).get().getRoles();
-        rolesRepository.deleteAll(roles);
+       // List<Role> roles = usersRepository.findById(id).get().getRoles();
+       // rolesRepository.deleteAll(roles);
         usersRepository.deleteById(id);
     }
 
