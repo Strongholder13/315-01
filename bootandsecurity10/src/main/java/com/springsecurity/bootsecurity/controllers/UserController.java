@@ -40,7 +40,7 @@ public class UserController {
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("newUser", new User());
         model.addAttribute("newRole", new Role());
-        model.addAttribute("currentUser", (User)userService.loadUserByUsername(authentication.getName()));
+        model.addAttribute("currentUser", userService.loadUserByUsername(authentication.getName()));
         model.addAttribute("allRoles", userService.listRoles());
         return "/admin";
     }

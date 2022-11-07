@@ -18,7 +18,7 @@
                     <strong  th:text="${currentUser.username}"></strong>
                      with roles:
                     <span  th:each="role : ${currentUser.roles}">
-                        <a th:text="${role}"></a>
+                        <a th:text="${role.getRole().substring(5)}"></a>
                         </span>
                 </span>
     </div>
@@ -90,7 +90,7 @@
                 <td th:text="${currentUser.age}"/>
                 <td th:text="${currentUser.username}"/>
                 <td><a th:each="role : ${currentUser.getRoles()}">
-                  <a th:text="${role.toString()}"></a>
+                  <a th:text="${role.getRole().substring(5)}"></a>
                 </a></td>
               </tr>
 

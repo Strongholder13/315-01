@@ -31,36 +31,37 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void add(User user, String role) {
-        List<Role> roles = new ArrayList();
+        List<Role> roleList = new ArrayList<>();
         if (role == null) {
-            role = "ROLE_NOROLE";
+            roleList.add(new Role("ROLE_USER"));
         }
-        Role newRole = new Role(role);
-        roles.add(newRole);
-        user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
+        else {
+            roleList = roleCheck(role);
+        }
+            user.setRoles(roleList);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            usersRepository.save(user);
     }
 
-    @Transactional
-    @Override
-    public void add(User user, List<Role> roles) {
-        user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
-    }
+//    @Transactional
+//    @Override
+//    public void add(User user, List<Role> roles) {
+//        user.setRoles(roles);
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        usersRepository.save(user);
+//    }
     @Transactional
     @Override
     public void update(User user, String roleName) {
-        List<Role> roles = new ArrayList();
+        List<Role> roleList;
         if (roleName == null) {
-            roles = usersRepository.findById(user.getId()).get().getRoles();
+            roleList = usersRepository.findById(user.getId()).get().getRoles();
         } else {
-            roles.add(new Role(roleName));
+            roleList = roleCheck(roleName);
         }
-            user.setRoles(roles);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            usersRepository.save(user);
+        user.setRoles(roleList);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        usersRepository.save(user);
 
     }
     @Override
@@ -97,5 +98,15 @@ public class UserServiceImp implements UserService {
             throw new UsernameNotFoundException("User not found");
         }
         return user.orElse(null);
+    }
+
+    public List<Role> roleCheck (String role) {
+        List<Role> roles = new ArrayList();
+        if (role.contains("ADMIN")) {
+            roles.add(new Role("ROLE_ADMIN"));
+        } if  (role.contains("USER")) {
+            roles.add(new Role("ROLE_USER"));
+        }
+        return roles;
     }
 }
