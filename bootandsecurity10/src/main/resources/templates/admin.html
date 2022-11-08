@@ -153,16 +153,15 @@
                                                     </div>
                                                     <div class="form-group text-center">
                                                         <label for="password"><strong>Password</strong></label>
-                                                        <input type="text" name="password" class="form-control" id="edit-password" th:value="${ussr.password}">
+                                                        <input type="text" name="password" class="form-control" id="edit-password" >
                                                     </div>
                                                     <div class="form-group text-center">
                                                         <label for="e-role"><strong>Role</strong></label>
 <!--                                                        <input type="hidden" name="roles" th:field="${ussr.roles}"/>-->
                                                         <select class="custom-select"
                                                                 id="e-Role"
-                                                                multiple="multiple" name="role" size="2" th:value="${newRole.role}">
-                                                            <option th:value="ROLE_ADMIN">ADMIN</option>
-                                                        <option th:value="ROLE_USER">USER</option>
+                                                                multiple="multiple" name="role" size="2" >
+                                                            <option th:each="role : ${allRoles}" th:value="${role}" th:text="${role.substring(5)} " ></option>
                                                         </select>
                                                     </div>
 

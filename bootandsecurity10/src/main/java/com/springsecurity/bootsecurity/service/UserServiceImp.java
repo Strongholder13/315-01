@@ -27,22 +27,6 @@ public class UserServiceImp implements UserService {
         this.rolesRepository = rolesRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-    @Transactional
-    @Override
-    public void add(User user, String role) {
-        List<Role> roleList = new ArrayList<>();
-        if (role == null) {
-            roleList.add(new Role("ROLE_USER"));
-        }
-        else {
-            roleList = roleCheck(role);
-        }
-            user.setRoles(roleList);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            usersRepository.save(user);
-    }
-
     @Transactional
     @Override
     public void add(User user, List<String> roles) {
@@ -58,15 +42,24 @@ public class UserServiceImp implements UserService {
     }
     @Transactional
     @Override
-    public void update(User user, String roleName) {
-        List<Role> roleList;
-        if (roleName == null) {
-            roleList = usersRepository.findById(user.getId()).get().getRoles();
+    public void update(User user, List<String> roles) {
+        List<Role> roleList = new ArrayList<>();
+        User toChange = usersRepository.findById(user.getId()).get();
+        if (roles == null) {
+            roleList = toChange.getRoles();
         } else {
-            roleList = roleCheck(roleName);
+            for (Role role : rolesRepository.findAll()) {
+                if (roles.contains(role.getRole())) {
+                    roleList.add(role);
+                }
+            }
         }
         user.setRoles(roleList);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getPassword() == "") {
+            user.setPassword(toChange.getPassword());
+        } else {
+           user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         usersRepository.save(user);
 
     }
@@ -87,8 +80,6 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void delete(int id) {
-       // List<Role> roles = usersRepository.findById(id).get().getRoles();
-       // rolesRepository.deleteAll(roles);
         usersRepository.deleteById(id);
     }
 
@@ -106,13 +97,4 @@ public class UserServiceImp implements UserService {
         return user.orElse(null);
     }
 
-    public List<Role> roleCheck (String role) {
-        List<Role> roles = new ArrayList();
-        if (role.contains("ADMIN")) {
-            roles.add(new Role("ROLE_ADMIN"));
-        } if  (role.contains("USER")) {
-            roles.add(new Role("ROLE_USER"));
-        }
-        return roles;
-    }
 }

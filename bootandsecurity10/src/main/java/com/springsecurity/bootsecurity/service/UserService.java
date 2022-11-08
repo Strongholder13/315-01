@@ -10,10 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    void add(User user, String role);
     void add(User user, List<String> roles);
-    void update(User user, String rolesName);
-  //  void update(User user);
+    void update(User user, List<String> roles);
 
     List<User> listUsers();
     List<String> listRoles();

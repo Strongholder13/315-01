@@ -48,8 +48,7 @@ public class UserController {
     @GetMapping("/user")
     public String indexUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.loadUserByUsername(authentication.getName());
-        model.addAttribute("currentUser", (User)userService.loadUserByUsername(authentication.getName()));
+        model.addAttribute("currentUser", userService.loadUserByUsername(authentication.getName()));
         return "/user";
     }
     @PostMapping("/registration")
@@ -63,8 +62,8 @@ public class UserController {
     }
     @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") User user,
-                             @ModelAttribute("addRoles") Role role) {
-        userService.update(user, role.getRole());
+                             @RequestParam(value = "role", required = false) List<String> role) {
+        userService.update(user, role);
         return "redirect:/admin";
     }
 
