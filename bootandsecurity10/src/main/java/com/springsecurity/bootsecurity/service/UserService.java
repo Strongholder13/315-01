@@ -1,9 +1,7 @@
 package com.springsecurity.bootsecurity.service;
 
 
-import com.springsecurity.bootsecurity.model.Role;
 import com.springsecurity.bootsecurity.model.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 

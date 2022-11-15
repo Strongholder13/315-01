@@ -2,11 +2,10 @@ package com.springsecurity.bootsecurity.repository;
 
 
 import com.springsecurity.bootsecurity.model.User;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 
 import java.util.Optional;
 

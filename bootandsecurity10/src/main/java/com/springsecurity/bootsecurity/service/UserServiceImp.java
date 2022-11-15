@@ -1,13 +1,10 @@
 package com.springsecurity.bootsecurity.service;
 
-
-
 import com.springsecurity.bootsecurity.model.Role;
 import com.springsecurity.bootsecurity.model.User;
 import com.springsecurity.bootsecurity.repository.RolesRepository;
 import com.springsecurity.bootsecurity.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
